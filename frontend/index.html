@@ -26,8 +26,6 @@
             margin-top: 0; 
             font-size: 18px;
         }
-        
-        /* Dashboard Container: Side-by-side on desktop */
         .dashboard { 
             display: flex; 
             gap: 20px; 
@@ -35,8 +33,6 @@
             margin: auto; 
             flex-direction: row; 
         }
-        
-        /* Individual Cards */
         .card { 
             flex: 1; 
             background: white; 
@@ -45,8 +41,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
             margin-bottom: 15px;
         }
-        
-        /* Forms & Inputs optimized for phone and desktop tap targets */
         form, .input-group { 
             display: flex; 
             flex-direction: column; 
@@ -102,8 +96,6 @@
             margin-bottom: 15px; 
             font-size: 14px;
         }
-        
-        /* Checklist Elements */
         ul { list-style: none; padding: 0; margin: 0; }
         .exercise-item { 
             background: #f8f9fa; 
@@ -126,8 +118,6 @@
             color: #888; 
             font-style: italic; 
         }
-        
-        /* Saved Database Log Display Cards */
         .log-card { 
             background: #fff; 
             border: 1px solid #e0e0e0; 
@@ -162,8 +152,6 @@
             border-radius: 4px; 
             cursor: pointer; 
         }
-        
-        /* Custom Exercise Inline Row Form Layout */
         .inline-form { 
             display: flex; 
             gap: 6px; 
@@ -178,8 +166,6 @@
             background-color: #6c757d; 
             white-space: nowrap;
         }
-
-        /* 📱 RESPONSIVE MAGIC: MEDIA QUERY FOR MOBILE PHONES */
         @media (max-width: 900px) {
             body { padding: 10px; }
             h1 { font-size: 20px; margin-bottom: 15px; }
@@ -191,7 +177,7 @@
 </head>
 <body>
 
-    <h1>🏋️‍♂️ Gym Tracker & Smart Routine Planner</h1>
+    <h1>Gym Tracker & Smart Routine Planner</h1>
 
     <div class="dashboard">
         <div class="card">
@@ -213,7 +199,7 @@
         </div>
 
         <div class="card" style="flex: 1.2;">
-            <h2>⚡ Today's Workout Builder</h2>
+            <h2>Today's Workout Builder</h2>
             
             <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; color: #856404;">
                 <span style="font-weight: bold; font-size: 14px;">⏱️ Rest Timer: <span id="timerDisplay">01:30</span></span>
