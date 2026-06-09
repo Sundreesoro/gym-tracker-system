@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// 1. GET: Fetch all grouped workout logs
+// 1. GET
 app.get('/api/workouts', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM workouts ORDER BY id DESC');
@@ -19,10 +19,10 @@ app.get('/api/workouts', async (req, res) => {
   }
 });
 
-// 2. POST: Save an ENTIRE workout session as 1 single log
+// 2. POST
 app.post('/api/workouts', async (req, res) => {
   try {
-    const { workout_name, exercises } = req.body; // exercises is now an array: ["Row", "Curl"]
+    const { workout_name, exercises } = req.body;
     const newWorkout = await pool.query(
       'INSERT INTO workouts (user_id, workout_name, exercises) VALUES (1, $1, $2) RETURNING *',
       [workout_name, exercises]
@@ -34,7 +34,7 @@ app.post('/api/workouts', async (req, res) => {
   }
 });
 
-// 3. DELETE: Remove a specific workout log card
+// 3. DELETE
 app.delete('/api/workouts/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -46,7 +46,7 @@ app.delete('/api/workouts/:id', async (req, res) => {
   }
 });
 
-// 4. PUT: Update User Metric Profiles
+// 4. PUT
 app.put('/api/profile', async (req, res) => {
   try {
     const { height, weight, goal } = req.body;
@@ -61,7 +61,7 @@ app.put('/api/profile', async (req, res) => {
   }
 });
 
-// 5. GET: Fetch Profile Settings
+// 5. GET
 app.get('/api/profile', async (req, res) => {
   try {
     const user = await pool.query('SELECT * FROM users WHERE id = 1');
@@ -72,11 +72,11 @@ app.get('/api/profile', async (req, res) => {
   }
 });
 
-// 6. PUT: Update an entire saved workout log card (Name & Exercise Array)
+// 6. PUT
 app.put('/api/workouts/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { workout_name, exercises } = req.body; // Expects an array of text
+    const { workout_name, exercises } = req.body;
     const updatedLog = await pool.query(
       'UPDATE workouts SET workout_name = $1, exercises = $2 WHERE id = $3 RETURNING *',
       [workout_name, exercises, id]
