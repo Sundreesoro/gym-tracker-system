@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gym Tracker Pro - Advanced Dashboard</title>
+    <style>
+        /* Global Base Settings */
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            margin: 0; 
+            background-color: #f0f2f5; 
+            color: #333; 
+            padding: 15px; 
+        }
+        h1 { 
+            text-align: center; 
+            color: #1a73e8; 
+            margin-bottom: 20px; 
+            font-size: 24px; 
+        }
+        h2 { 
+            color: #444; 
+            border-bottom: 2px solid #f0f2f5; 
+            padding-bottom: 10px; 
+            margin-top: 0; 
+            font-size: 18px;
+        }
+        
+        /* Dashboard Container: Side-by-side on desktop */
+        .dashboard { 
+            display: flex; 
+            gap: 20px; 
+            max-width: 1400px; 
+            margin: auto; 
+            flex-direction: row; 
+        }
+        
+        /* Individual Cards */
+        .card { 
+            flex: 1; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05); 
+            margin-bottom: 15px;
+        }
+        
+        /* Forms & Inputs optimized for phone and desktop tap targets */
+        form, .input-group { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+        input, select, button { 
+            padding: 14px; 
+            font-size: 16px; 
+            border: 1px solid #ccced1; 
+            border-radius: 6px; 
+            outline: none;
+        }
+        button { 
+            background-color: #1a73e8; 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.2s; 
+        }
+        button:hover { 
+            background-color: #155cb4; 
+        }
+        .btn-edit { 
+            background-color: #ffc107; 
+            color: black; 
+            padding: 6px 10px; 
+            font-size: 13px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            margin-right: 5px;
+        }
+        .btn-edit:hover { 
+            background-color: #e0a800; 
+        }
+        .btn-success { 
+            background-color: #28a745; 
+            width: 100%; 
+            margin-top: 15px; 
+            font-size: 16px; 
+        }
+        .btn-success:hover { 
+            background-color: #218838; 
+        }
+        .recommendation-box { 
+            background: #e8f0fe; 
+            padding: 15px; 
+            border-radius: 6px; 
+            color: #1967d2; 
+            font-weight: 500; 
+            margin-bottom: 15px; 
+            font-size: 14px;
+        }
+        
+        /* Checklist Elements */
+        ul { list-style: none; padding: 0; margin: 0; }
+        .exercise-item { 
+            background: #f8f9fa; 
+            margin: 8px 0; 
+            padding: 12px; 
+            border-radius: 6px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 10px; 
+            border-left: 4px solid #ff9800; 
+        }
+        .exercise-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px; 
+            cursor: pointer;
+        }
+        .exercise-item.completed span { 
+            text-decoration: line-through; 
+            color: #888; 
+            font-style: italic; 
+        }
+        
+        /* Saved Database Log Display Cards */
+        .log-card { 
+            background: #fff; 
+            border: 1px solid #e0e0e0; 
+            border-radius: 8px; 
+            padding: 15px; 
+            margin-bottom: 15px; 
+            border-top: 5px solid #1a73e8; 
+        }
+        .log-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            font-weight: bold; 
+            border-bottom: 1px solid #eee; 
+            padding-bottom: 8px; 
+            margin-bottom: 10px; 
+        }
+        .log-exercises { 
+            padding-left: 20px; 
+            list-style-type: disc; 
+            color: #555; 
+        }
+        .log-exercises li { 
+            margin: 6px 0; 
+        }
+        .btn-delete { 
+            background-color: #dc3545; 
+            color: white; 
+            padding: 6px 10px; 
+            font-size: 13px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+        }
+        
+        /* Custom Exercise Inline Row Form Layout */
+        .inline-form { 
+            display: flex; 
+            gap: 6px; 
+            flex-direction: row; 
+        }
+        .inline-form input { 
+            flex: 1; 
+            padding: 12px; 
+        }
+        .inline-form button { 
+            padding: 12px; 
+            background-color: #6c757d; 
+            white-space: nowrap;
+        }
+
+        /* 📱 RESPONSIVE MAGIC: MEDIA QUERY FOR MOBILE PHONES */
+        @media (max-width: 900px) {
+            body { padding: 10px; }
+            h1 { font-size: 20px; margin-bottom: 15px; }
+            .dashboard { flex-direction: column; gap: 15px; }
+            .card { padding: 15px; }
+            .exercise-item span { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🏋️‍♂️ Gym Tracker & Smart Routine Planner</h1>
+
+    <div class="dashboard">
+        <div class="card">
+            <h2>👤 Fitness Profile</h2>
+            <form id="profileForm">
+                <input type="number" id="height" placeholder="Height (cm)" required>
+                <input type="number" id="weight" placeholder="Weight (kg)" required>
+                <select id="goal" required>
+                    <option value="" disabled selected>Select Fitness Goal</option>
+                    <option value="weight_loss">Weight Loss / Cardio</option>
+                    <option value="muscle_gain">Build Muscle / Strength</option>
+                    <option value="fitness">General Fitness / Toning</option>
+                </select>
+                <button type="submit">Update Setup Metrics</button>
+            </form>
+
+            <h2>📋 Smart Goal Advice</h2>
+            <div id="aiRecommendation" class="recommendation-box">Fill out your profile metrics...</div>
+        </div>
+
+        <div class="card" style="flex: 1.2;">
+            <h2>⚡ Today's Workout Builder</h2>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeeba; padding: 12px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between; color: #856404;">
+                <span style="font-weight: bold; font-size: 14px;">⏱️ Rest Timer: <span id="timerDisplay">01:30</span></span>
+                <div class="btn-group">
+                    <button type="button" onclick="startRestTimer(90)" style="background: #856404; color: white; padding: 4px 8px; font-size: 12px; border:none; border-radius:4px; cursor:pointer;">90s</button>
+                    <button type="button" onclick="startRestTimer(60)" style="background: #856404; color: white; padding: 4px 8px; font-size: 12px; border:none; border-radius:4px; cursor:pointer;">60s</button>
+                    <button type="button" onclick="stopRestTimer()" style="background: #dc3545; color: white; padding: 4px 8px; font-size: 12px; border:none; border-radius:4px; cursor:pointer;">Stop</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label style="font-weight: bold; color: #555; font-size: 14px;">Choose Today's Target Routine:</label>
+                <select id="routineSelector">
+                    <option value="" disabled selected>-- Choose a Split --</option>
+                    <option value="Push Day">Push Day (Chest/Shoulders/Triceps)</option>
+                    <option value="Pull Day">Pull Day (Back/Biceps)</option>
+                    <option value="Leg Day">Leg Day (Quads/Hamstrings/Calves)</option>
+                    <option value="Shoulder Day">Shoulder Day (Deltoids & Traps)</option>
+                    <option value="Arms & Forearms">Arms & Forearms (Biceps/Triceps/Forearms)</option>
+                    <option value="Cardio & Core">Cardio & Core Focus</option>
+                </select>
+            </div>
+
+            <div class="inline-form">
+                <input type="text" id="customExerciseInput" placeholder="Add custom/extra exercise...">
+                <button type="button" onclick="addCustomExerciseToRoutine()">➕ Add</button>
+            </div>
+
+            <h3 style="margin-top: 20px; color:#555; font-size: 16px;">Crosscheck Finished Exercises:</h3>
+            <ul id="temporaryRoutineList">
+                <p style="color: #888; font-style: italic; font-size: 14px;">Select a split above to populate your tracking sheet.</p>
+            </ul>
+            <button class="btn-success" id="commitRoutineBtn" style="display:none;" onclick="saveEntireRoutineToDatabase()">💾 Log Routine to History</button>
+        </div>
+
+        <div class="card">
+            <h2>📅 Saved Database Log</h2>
+            <div id="workoutLogHistory"></div>
+        </div>
+    </div>
+
+<script src="app.js"></script>
+</body>
+</html>
