@@ -1,7 +1,6 @@
 const API_URL = 'http://localhost:5000/api/workouts';
 const PROFILE_URL = 'http://localhost:5000/api/profile';
 
-// Comprehensive Gym Library Presets mapping
 const routinePresets = {
     "Push Day": [
         "Bench Press (4 Sets)", 
@@ -52,7 +51,6 @@ const routinePresets = {
 let activeLocalRoutine = [];
 let currentRoutineName = "";
 
-// Build Interactive Checkbox State on selection dropdown change
 document.getElementById('routineSelector').addEventListener('change', (e) => {
     currentRoutineName = e.target.value;
     if (routinePresets[currentRoutineName]) {
@@ -61,7 +59,6 @@ document.getElementById('routineSelector').addEventListener('change', (e) => {
     }
 });
 
-// Render working template list into interactive builder column
 function renderTemporaryRoutine() {
     const tempContainer = document.getElementById('temporaryRoutineList');
     const commitBtn = document.getElementById('commitRoutineBtn');
@@ -89,13 +86,11 @@ function renderTemporaryRoutine() {
     });
 }
 
-// Toggle exercise completion flag
 function toggleExerciseCheck(index) {
     activeLocalRoutine[index].completed = !activeLocalRoutine[index].completed;
     renderTemporaryRoutine();
 }
 
-// Inject variations or custom movements dynamically
 function addCustomExerciseToRoutine() {
     const input = document.getElementById('customExerciseInput');
     const val = input.value.trim();
@@ -106,20 +101,16 @@ function addCustomExerciseToRoutine() {
     renderTemporaryRoutine();
 }
 
-// Drop unperformed exercises from active list setup array 
 function deleteLocalExercise(index) {
     activeLocalRoutine.splice(index, 1);
     renderTemporaryRoutine();
 }
 
-// POST: Pack arrays into 1 uniform backend card with a Fail-Safe Verification Loop
 async function saveEntireRoutineToDatabase() {
     if (activeLocalRoutine.length === 0) return;
     
     const exerciseNamesArray = activeLocalRoutine.map(item => item.name);
 
-    // 🛑 FAIL-SAFE VERIFICATION WINDOW
-    // Creates a neat text preview of the list before it locks into PostgreSQL
     const routinePreviewText = exerciseNamesArray.map((ex, i) => `${i + 1}. ${ex}`).join('\n');
     
     const userIsSure = confirm(
@@ -129,7 +120,6 @@ async function saveEntireRoutineToDatabase() {
         `Click OK to lock this into the database, or Cancel to go back and edit!`
     );
 
-    // If the user clicks Cancel, we stop right here so they can add/remove items!
     if (!userIsSure) return;
 
     try {
@@ -154,7 +144,6 @@ async function saveEntireRoutineToDatabase() {
     }
 }
 
-// GET: Fetch nested arrays from PostgreSQL to history viewport (With Edit Button)
 async function fetchWorkouts() {
     try {
         const response = await fetch(API_URL);
@@ -181,9 +170,7 @@ async function fetchWorkouts() {
                 exerciseListHTML = "<li>No movements tracked.</li>";
             }
 
-            // Escaping single quotes in the workout name for safety in the inline onclick string
             const safeName = log.workout_name.replace(/'/g, "\\'");
-            // Turn array into a string separated by commas for the edit prompt
             const exerciseString = log.exercises ? log.exercises.join(', ').replace(/'/g, "\\'") : "";
 
             card.innerHTML = `
@@ -208,7 +195,6 @@ async function fetchWorkouts() {
     }
 }
 
-// NEW FUNCTION: Edit a complete saved log layout inside PostgreSQL
 async function editDBWorkoutLog(id, currentName, currentExercisesString) {
     const newName = prompt("Update routine group title:", currentName);
     if (newName === null) return; // User cancelled
@@ -219,11 +205,10 @@ async function editDBWorkoutLog(id, currentName, currentExercisesString) {
     );
     if (newExercisesString === null) return; // User cancelled
 
-    // Convert the comma-separated string back into a clean JavaScript array
     const updatedExercisesArray = newExercisesString
         .split(',')
         .map(ex => ex.trim())
-        .filter(ex => ex !== ""); // Filter out empty inputs
+        .filter(ex => ex !== "");
 
     try {
         const response = await fetch(`${API_URL}/${id}`, {
@@ -236,7 +221,7 @@ async function editDBWorkoutLog(id, currentName, currentExercisesString) {
         });
 
         if (response.ok) {
-            fetchWorkouts(); // Refresh the column instantly!
+            fetchWorkouts();
         }
     } catch (err) {
         console.error('Error updating saved database log:', err);
@@ -250,9 +235,6 @@ async function deleteDBWorkout(id) {
     }
 }
 
-/* ==========================================
-   METRIC USER PROFILE SYNCING
-   ========================================== */
 async function loadProfile() {
     try {
         const response = await fetch(PROFILE_URL);
@@ -296,9 +278,6 @@ document.getElementById('profileForm').addEventListener('submit', async (e) => {
     } catch (err) { console.error(err); }
 });
 
-/* ==========================================
-   ⏱️ LIVE REST TIMER ENGINE FUNCTIONALITY
-   ========================================== */
 let countdownInterval = null;
 
 function startRestTimer(seconds) {
@@ -330,6 +309,5 @@ function updateTimerDisplay(totalSeconds) {
         `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
-// Initial Boot triggers
 loadProfile();
 fetchWorkouts();
